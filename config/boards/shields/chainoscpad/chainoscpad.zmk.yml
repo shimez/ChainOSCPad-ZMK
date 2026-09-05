@@ -1,0 +1,10 @@
+file_format: "1"
+id: chainoscpad
+name: ChainOSCPad
+type: shield
+url: https://github.com/shimez/ChainOSCPad
+requires:
+  - xiao
+features:
+  - keys
+  - encoder

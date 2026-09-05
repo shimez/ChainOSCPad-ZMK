@@ -1,0 +1,93 @@
+#include <dt-bindings/zmk/matrix_transform.h>
+
+/*
+ * ChainOSCPad wiring
+ * D0..D3 = ROW0..ROW3
+ * D4..D6 = COL0..COL2
+ * D7 = Encoder A
+ * D8 = Encoder B
+ * D9 = Encoder Push
+ * D10 = Spare
+ *
+ * PCB diode direction: COL ->| ROW
+ */
+
+/ {
+    chosen {
+        zmk,kscan = &kscan_composite;
+        zmk,matrix-transform = &default_transform;
+    };
+
+    matrix_kscan: matrix_kscan {
+        compatible = "zmk,kscan-gpio-matrix";
+        wakeup-source;
+        diode-direction = "col2row";
+
+        row-gpios
+            = <&xiao_d 0 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            , <&xiao_d 1 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            , <&xiao_d 2 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            , <&xiao_d 3 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
+            ;
+
+        col-gpios
+            = <&xiao_d 4 GPIO_ACTIVE_HIGH>
+            , <&xiao_d 5 GPIO_ACTIVE_HIGH>
+            , <&xiao_d 6 GPIO_ACTIVE_HIGH>
+            ;
+
+        debounce-press-ms = <5>;
+        debounce-release-ms = <5>;
+    };
+
+    encoder_push_kscan: encoder_push_kscan {
+        compatible = "zmk,kscan-gpio-direct";
+        wakeup-source;
+        input-gpios = <&xiao_d 9 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+        debounce-press-ms = <5>;
+        debounce-release-ms = <5>;
+    };
+
+    kscan_composite: kscan {
+        compatible = "zmk,kscan-composite";
+        rows = <5>;
+        columns = <3>;
+
+        matrix {
+            kscan = <&matrix_kscan>;
+        };
+
+        encoder_push {
+            kscan = <&encoder_push_kscan>;
+            row-offset = <4>;
+            col-offset = <0>;
+        };
+    };
+
+    default_transform: keymap_transform {
+        compatible = "zmk,matrix-transform";
+        rows = <5>;
+        columns = <3>;
+        map = <
+            RC(0,0) RC(0,1) RC(0,2)
+            RC(1,0) RC(1,1) RC(1,2)
+            RC(2,0) RC(2,1) RC(2,2)
+            RC(3,0) RC(3,1) RC(3,2)
+            RC(4,0)
+        >;
+    };
+
+    encoder: encoder {
+        compatible = "alps,ec11";
+        a-gpios = <&xiao_d 7 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+        b-gpios = <&xiao_d 8 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+        steps = <80>;
+        status = "okay";
+    };
+
+    sensors: sensors {
+        compatible = "zmk,keymap-sensors";
+        sensors = <&encoder>;
+        triggers-per-rotation = <20>;
+    };
+};

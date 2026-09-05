@@ -1,0 +1,15 @@
+if SHIELD_CHAINOSCPAD
+
+config ZMK_KEYBOARD_NAME
+    default "ChainOSCPad"
+
+config ZMK_USB
+    default y
+
+config ZMK_BLE
+    default y
+
+config EC11
+    default y
+
+endif
