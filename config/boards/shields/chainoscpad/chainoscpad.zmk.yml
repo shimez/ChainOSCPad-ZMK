@@ -4,7 +4,7 @@ name: ChainOSCPad
 type: shield
 url: https://github.com/shimez/ChainOSCPad
 requires:
-  - xiao
+  - seeed_xiao
 features:
   - keys
   - encoder
