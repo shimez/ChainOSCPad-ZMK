@@ -1,67 +1,63 @@
-# ChainOSCPad ZMK firmware
+# ChainOSCPad ZMK
 
-ChainOSCPad PCB + Seeed Studio XIAO nRF52840 用の ZMK shield / user config です。
+ZMK firmware configuration for ChainOSCPad using the Seeed Studio XIAO nRF52840.
 
-## Hardware mapping
+## Default controls
 
-| ChainOSCPad | XIAO pin | ZMK role |
-|---|---:|---|
-| ROW0 | D0 | Matrix row 0 |
-| ROW1 | D1 | Matrix row 1 |
-| ROW2 | D2 | Matrix row 2 |
-| ROW3 | D3 | Matrix row 3 |
-| COL0 | D4 | Matrix column 0 |
-| COL1 | D5 | Matrix column 1 |
-| COL2 | D6 | Matrix column 2 |
-| Encoder A | D7 | Encoder A |
-| Encoder B | D8 | Encoder B |
-| Encoder Push | D9 | Direct key |
-| Spare | D10 | Unused |
+- SW1-SW12: F13-F24
+- Encoder push: Mute
+- Encoder rotation: Volume Down / Volume Up
+- USB HID and Bluetooth HID enabled
 
-PCB diode direction is COL ->| ROW, so the ZMK matrix uses `col2row`.
+## Current module layout
 
-## Default keymap
+The shield lives in the repository-root module path:
 
-- SW1..SW12: F13..F24
-- Encoder CW: Volume Up
-- Encoder CCW: Volume Down
-- Encoder Push: Mute
-
-## Recommended first build: GitHub Actions
-
-For the first ZMK test, no local Zephyr/west toolchain is required.
-
-1. Create a new GitHub repository.
-2. Push this whole project.
-3. Open the repository's Actions tab.
-4. Run or wait for `Build ZMK firmware`.
-5. Download the firmware artifact from the successful run.
-6. Put the XIAO nRF52840 in UF2 bootloader mode and copy the generated `.uf2`.
-
-Build target is already defined in `build.yaml`:
-
-```yaml
-include:
-  - board: xiao_ble//zmk
-    shield: chainoscpad
+```text
+boards/shields/chainoscpad/
 ```
 
-## Flashing XIAO nRF52840
+and the repository is exposed to Zephyr/ZMK using:
 
-1. Connect the XIAO via USB.
-2. Double-reset the board to enter UF2 bootloader mode.
-3. A USB mass-storage drive appears.
-4. Copy the generated `.uf2` file to it.
-5. The board reboots automatically.
+```text
+zephyr/module.yml
+```
 
-## Local build
+The old `config/boards/...` compatibility path is not used.
 
-The first test is intentionally GitHub-Actions-first.
-If you later want local builds in VS Code on Windows, set up Python, west,
-CMake/Ninja and the Zephyr SDK at that point.
+## ZMK Studio
 
-## Notes
+Studio support is enabled in `build.yaml` with:
 
-This is v0.1 for initial hardware validation.
-The encoder `steps` and `triggers-per-rotation` values may need tuning for
-the actual encoder used on ChainOSCPad.
+```yaml
+snippet: studio-rpc-usb-uart
+cmake-args: -DCONFIG_ZMK_STUDIO=y
+```
+
+The shield defines a `zmk,physical-layout` with all 13 physical key positions.
+
+Open ZMK Studio at https://zmk.studio/ in Chrome/Edge or use the native app.
+
+This configuration sets:
+
+```text
+CONFIG_ZMK_STUDIO_LOCKING=n
+```
+
+so no physical key needs to be reserved for `&studio_unlock`.
+
+Two reserved layers (`Extra 1` and `Extra 2`) are included for later activation
+inside ZMK Studio.
+
+Important: after Studio stores a runtime keymap, later changes to the stock
+`.keymap` do not automatically replace that stored layout. Use **Restore Stock
+Settings** in ZMK Studio when you want to return to the firmware's stock keymap.
+
+Encoder sensor bindings remain in `chainoscpad.keymap`; encoder assignment
+editing is not currently a normal ZMK Studio capability.
+
+## Build
+
+Push to GitHub and use the included GitHub Actions workflow. Download the
+generated artifact, extract the `.uf2`, enter the XIAO nRF52840 UF2 bootloader,
+and copy the firmware file to the bootloader drive.

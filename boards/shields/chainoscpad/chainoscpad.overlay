@@ -1,4 +1,5 @@
 #include <dt-bindings/zmk/matrix_transform.h>
+#include "chainoscpad-layouts.dtsi"
 
 /*
  * ChainOSCPad wiring
@@ -14,8 +15,7 @@
 
 / {
     chosen {
-        zmk,kscan = &kscan_composite;
-        zmk,matrix-transform = &default_transform;
+        zmk,physical-layout = &chainoscpad_layout;
     };
 
     matrix_kscan: matrix_kscan {
@@ -90,4 +90,9 @@
         sensors = <&encoder>;
         triggers-per-rotation = <20>;
     };
+};
+
+&chainoscpad_layout {
+    kscan = <&kscan_composite>;
+    transform = <&default_transform>;
 };
