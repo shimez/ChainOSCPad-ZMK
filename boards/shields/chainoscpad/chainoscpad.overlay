@@ -14,6 +14,20 @@
  */
 
 / {
+    aliases {
+        chainoscpad-led = &chainoscpad_led;
+    };
+
+    leds {
+        compatible = "gpio-leds";
+
+        chainoscpad_led: chainoscpad_led {
+            gpios = <&xiao_d 10 GPIO_ACTIVE_HIGH>;
+        };
+    };
+};
+
+/ {
     chosen {
         zmk,physical-layout = &chainoscpad_layout;
     };

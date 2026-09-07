@@ -1,5 +1,6 @@
 name: zmk-keyboard-chainoscpad
 
 build:
+  cmake: .
   settings:
     board_root: .
