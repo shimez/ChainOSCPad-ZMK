@@ -6,12 +6,16 @@ on:
       - "boards/**"
       - "config/**"
       - "zephyr/**"
+      - "src/**"
+      - "CMakeLists.txt"
       - "build.yaml"
       - ".github/workflows/build.yml"
   pull_request:
     paths:
       - "boards/**"
       - "config/**"
+      - "src/**"
+      - "CMakeLists.txt"
       - "zephyr/**"
       - "build.yaml"
       - ".github/workflows/build.yml"
