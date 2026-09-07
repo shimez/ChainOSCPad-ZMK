@@ -5,20 +5,29 @@
         compatible = "zmk,physical-layout";
         display-name = "ChainOSCPad";
 
-        keys = <
-            &key_physical_attrs 100 100   0   0 0 0 0
-            &key_physical_attrs 100 100 100   0 0 0 0
-            &key_physical_attrs 100 100 200   0 0 0 0
-            &key_physical_attrs 100 100   0 100 0 0 0
-            &key_physical_attrs 100 100 100 100 0 0 0
-            &key_physical_attrs 100 100 200 100 0 0 0
-            &key_physical_attrs 100 100   0 200 0 0 0
-            &key_physical_attrs 100 100 100 200 0 0 0
-            &key_physical_attrs 100 100 200 200 0 0 0
-            &key_physical_attrs 100 100   0 300 0 0 0
-            &key_physical_attrs 100 100 100 300 0 0 0
-            &key_physical_attrs 100 100 200 300 0 0 0
-            &key_physical_attrs 100 100 350 150 0 0 0
-        >;
+        /*
+         * 3 x 4 key grid + encoder push.
+         * Units are centi-keyunits.
+         * Position order must match default_transform and keymap bindings.
+         */
+        keys
+            = <&key_physical_attrs 100 100   0   0 0 0 0>
+            , <&key_physical_attrs 100 100 100   0 0 0 0>
+            , <&key_physical_attrs 100 100 200   0 0 0 0>
+
+            , <&key_physical_attrs 100 100   0 100 0 0 0>
+            , <&key_physical_attrs 100 100 100 100 0 0 0>
+            , <&key_physical_attrs 100 100 200 100 0 0 0>
+
+            , <&key_physical_attrs 100 100   0 200 0 0 0>
+            , <&key_physical_attrs 100 100 100 200 0 0 0>
+            , <&key_physical_attrs 100 100 200 200 0 0 0>
+
+            , <&key_physical_attrs 100 100   0 300 0 0 0>
+            , <&key_physical_attrs 100 100 100 300 0 0 0>
+            , <&key_physical_attrs 100 100 200 300 0 0 0>
+
+            , <&key_physical_attrs 100 100 350 150 0 0 0>
+            ;
     };
 };
