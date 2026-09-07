@@ -1,73 +1,63 @@
 #include <dt-bindings/zmk/matrix_transform.h>
+#include <zephyr/dt-bindings/gpio/gpio.h>
 #include "chainoscpad-layouts.dtsi"
-
-/*
- * ChainOSCPad wiring
- * D0..D3 = ROW0..ROW3
- * D4..D6 = COL0..COL2
- * D7 = Encoder A
- * D8 = Encoder B
- * D9 = Encoder Push
- * D10 = Spare
- *
- * PCB diode direction: COL ->| ROW
- */
 
 / {
     chosen {
         zmk,physical-layout = &chainoscpad_layout;
     };
 
-    matrix_kscan: matrix_kscan {
-        compatible = "zmk,kscan-gpio-matrix";
-        wakeup-source;
-        diode-direction = "col2row";
+    leds {
+        compatible = "gpio-leds";
 
+        chainoscpad_led: chainoscpad_led {
+            gpios = <&xiao_d 10 GPIO_ACTIVE_HIGH>;
+            default-state = "on";
+        };
+    };
+
+    kscan_matrix: kscan_matrix {
+        compatible = "zmk,kscan-gpio-matrix";
+        diode-direction = "col2row";
         row-gpios
             = <&xiao_d 0 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
             , <&xiao_d 1 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
             , <&xiao_d 2 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
             , <&xiao_d 3 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>
             ;
-
         col-gpios
             = <&xiao_d 4 GPIO_ACTIVE_HIGH>
             , <&xiao_d 5 GPIO_ACTIVE_HIGH>
             , <&xiao_d 6 GPIO_ACTIVE_HIGH>
             ;
-
-        debounce-press-ms = <5>;
-        debounce-release-ms = <5>;
     };
 
-    encoder_push_kscan: encoder_push_kscan {
+    kscan_encoder_button: kscan_encoder_button {
         compatible = "zmk,kscan-gpio-direct";
-        wakeup-source;
         input-gpios = <&xiao_d 9 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
-        debounce-press-ms = <5>;
-        debounce-release-ms = <5>;
     };
 
-    kscan_composite: kscan {
+    kscan_composite: kscan_composite {
         compatible = "zmk,kscan-composite";
-        rows = <5>;
-        columns = <3>;
 
         matrix {
-            kscan = <&matrix_kscan>;
+            kscan = <&kscan_matrix>;
+            row-offset = <0>;
+            col-offset = <0>;
         };
 
-        encoder_push {
-            kscan = <&encoder_push_kscan>;
+        encoder_button {
+            kscan = <&kscan_encoder_button>;
             row-offset = <4>;
             col-offset = <0>;
         };
     };
 
-    default_transform: keymap_transform {
+    default_transform: keymap_transform_0 {
         compatible = "zmk,matrix-transform";
         rows = <5>;
         columns = <3>;
+
         map = <
             RC(0,0) RC(0,1) RC(0,2)
             RC(1,0) RC(1,1) RC(1,2)
